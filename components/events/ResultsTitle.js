@@ -1,4 +1,4 @@
-import Button from '../ui/button';
+import Button from '../ui/Button';
 import styles from './ResultsTitle.module.css';
 
 function ResultsTitle(props) {
