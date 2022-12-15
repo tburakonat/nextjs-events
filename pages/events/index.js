@@ -15,7 +15,6 @@ export default function AllEventsPage() {
 
 	return (
 		<React.Fragment>
-			<h1>All Events</h1>
 			<EventsSearch onSearch={findEventsHandler} />
 			<EventList items={events} />
 		</React.Fragment>
