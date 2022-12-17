@@ -4,6 +4,7 @@ import ResultsTitle from '../../components/events/ResultsTitle';
 import { Fragment } from 'react';
 import ErrorAlert from '../../components/ui/ErrorAlert';
 import Button from '../../components/ui/Button';
+import Head from 'next/head';
 
 export default function FilteredEventsPage(props) {
 	if (props.hasError) {
@@ -33,9 +34,17 @@ export default function FilteredEventsPage(props) {
 	}
 
 	const date = new Date(props.yearNum, props.monthNum - 1);
+	const monthString = date.toLocaleString('en-US', { month: 'long' });
+	const yearString = date.getFullYear();
 
 	return (
 		<Fragment>
+			<Head>
+				<title>
+					Events {monthString ? monthString : null} {yearString ? yearString : null}
+				</title>
+				<meta name="description" content={`All events for ${monthString} ${yearString}`} />
+			</Head>
 			<ResultsTitle date={date} />
 			<EventList items={props.filteredEvents} />
 		</Fragment>

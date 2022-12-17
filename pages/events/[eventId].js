@@ -4,6 +4,7 @@ import EventSummary from '../../components/event-detail/EventSummary';
 import EventLogistics from '../../components/event-detail/EventLogistics';
 import EventContent from '../../components/event-detail/EventContent';
 import ErrorAlert from '../../components/ui/ErrorAlert';
+import Head from 'next/head';
 
 export default function EventDetailPage(props) {
 	const { event } = props;
@@ -18,6 +19,10 @@ export default function EventDetailPage(props) {
 
 	return (
 		<React.Fragment>
+			<Head>
+				<title>{event.title}</title>
+				<meta name="description" content={event.description} />
+			</Head>
 			<EventSummary title={event.title} />
 			<EventLogistics date={event.date} address={event.location} image={event.image} imageAlt={event.title} />
 			<EventContent>
