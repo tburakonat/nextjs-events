@@ -16,7 +16,7 @@ function NewsletterRegistration() {
 		})
 			.then(res => res.json())
 			.then(data => console.log(data.message))
-			.catch(err => console.log(err));
+			.catch(err => console.log(err.message));
 
 		setInput('');
 	}
