@@ -6,11 +6,11 @@ function CommentList(props) {
 		<ul className={styles.comments}>
 			{props.items.map(item => {
 				return (
-					<li key={item.id}>
+					<li key={item._id}>
 						{' '}
 						<p>{item.text}</p>
 						<div>
-							By <adress>{item.name}</adress>
+							By <address>{item.name}</address>
 						</div>
 					</li>
 				);
