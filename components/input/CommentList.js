@@ -1,21 +1,20 @@
 import styles from './CommentList.module.css';
 
-function CommentList() {
+function CommentList(props) {
+	console.log(props.items);
 	return (
 		<ul className={styles.comments}>
-			{/* Render list of comments - fetched from API */}
-			<li>
-				<p>My comment is amazing!</p>
-				<div>
-					By <address>Maximilian</address>
-				</div>
-			</li>
-			<li>
-				<p>My comment is amazing!</p>
-				<div>
-					By <address>Maximilian</address>
-				</div>
-			</li>
+			{props.items.map(item => {
+				return (
+					<li key={item.id}>
+						{' '}
+						<p>{item.text}</p>
+						<div>
+							By <adress>{item.name}</adress>
+						</div>
+					</li>
+				);
+			})}
 		</ul>
 	);
 }
