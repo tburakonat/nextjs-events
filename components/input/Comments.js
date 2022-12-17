@@ -14,8 +14,11 @@ function Comments(props) {
 		if (showComments) {
 			fetch(`/api/comments/${eventId}`)
 				.then(res => res.json())
-				.then(data => setComments(data.comments))
-				.catch(err => console.log(err));
+				.then(data => {
+					console.log(data);
+					setComments(data.comments);
+				})
+				.catch(err => console.log(err.message));
 		}
 	}, [showComments]);
 

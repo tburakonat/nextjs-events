@@ -1,28 +1,34 @@
-import { MongoClient } from 'mongodb';
-const DB_PASSWORD = process.env.DB_PASSWORD;
+import { connectDatabase, insertDocument, getAllDocuments } from '../../../helpers/db-utils';
 
 async function handler(req, res) {
-	const client = await MongoClient.connect(
-		`mongodb+srv://our-first-user:${DB_PASSWORD}@events.imn2rbz.mongodb.net/?retryWrites=true&w=majority`
-	);
+	const { eventId } = req.query;
 
-	const db = client.db('events');
+	let client;
+
+	try {
+		client = await connectDatabase();
+	} catch (error) {
+		res.status(500).json({ message: 'Could not connect to db' });
+		return;
+	}
 
 	switch (req.method) {
 		case 'GET':
-			const documents = await db
-				.collection('comments')
-				.find({ eventId: req.query.eventId })
-				.sort({ _id: -1 })
-				.toArray();
+			let documents;
 
-			res.status(200).json({ message: 'Loaded comments', comments: documents });
+			try {
+				documents = await getAllDocuments(client, 'comments', { _id: -1 }, { eventId });
+				res.status(200).json({ message: 'Loaded comments', comments: documents });
+			} catch (error) {
+				res.status(500).json({ message: 'Could not get comments' });
+			}
 
 			break;
 		case 'POST':
 			const { email, name, text } = req.body;
 			if (!email.includes('@') || !name || name.trim() === '' || !text || text.trim() === '') {
 				res.status(422).json({ message: 'Invalid input', data: req.body });
+				client.close();
 				return;
 			}
 
@@ -30,12 +36,15 @@ async function handler(req, res) {
 				email,
 				name,
 				text,
-				eventId: req.query.eventId,
+				eventId,
 			};
 
-			await db.collection('comments').insertOne(newComment);
-
-			res.status(201).json({ message: 'Added comment', comment: newComment });
+			try {
+				await insertDocument(client, 'comments', newComment);
+				res.status(201).json({ message: 'Added comment', comment: newComment });
+			} catch (error) {
+				res.status(500).json({ message: 'Could not insert in db' });
+			}
 
 			break;
 	}
