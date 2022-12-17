@@ -7,9 +7,23 @@ import Button from '../../components/ui/Button';
 import Head from 'next/head';
 
 export default function FilteredEventsPage(props) {
+	const date = new Date(props.yearNum, props.monthNum - 1);
+	const monthString = date.toLocaleString('en-US', { month: 'long' });
+	const yearString = date.getFullYear();
+
+	const pageHeadData = (
+		<Head>
+			<title>
+				Events {monthString ? monthString : null} {yearString ? yearString : null}
+			</title>
+			<meta name="description" content={`All events for ${monthString} ${yearString}`} />
+		</Head>
+	);
+
 	if (props.hasError) {
 		return (
 			<Fragment>
+				{pageHeadData}
 				<ErrorAlert>
 					<p>Invalid filter. Please adjust your values.</p>
 				</ErrorAlert>
@@ -23,6 +37,7 @@ export default function FilteredEventsPage(props) {
 	if (!props.filteredEvents || props.filteredEvents.length === 0) {
 		return (
 			<Fragment>
+				{pageHeadData}
 				<ErrorAlert>
 					<p>No events found for the chosen filter!</p>
 				</ErrorAlert>
@@ -33,18 +48,9 @@ export default function FilteredEventsPage(props) {
 		);
 	}
 
-	const date = new Date(props.yearNum, props.monthNum - 1);
-	const monthString = date.toLocaleString('en-US', { month: 'long' });
-	const yearString = date.getFullYear();
-
 	return (
 		<Fragment>
-			<Head>
-				<title>
-					Events {monthString ? monthString : null} {yearString ? yearString : null}
-				</title>
-				<meta name="description" content={`All events for ${monthString} ${yearString}`} />
-			</Head>
+			{pageHeadData}
 			<ResultsTitle date={date} />
 			<EventList items={props.filteredEvents} />
 		</Fragment>
